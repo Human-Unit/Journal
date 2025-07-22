@@ -56,4 +56,7 @@ func main() {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
-//github added
+//         "updated_at": entry.UpdatedAt.Format(time.RFC3339),
+//         "user_id":   entry.UserID,
+//         "content":   entry.Content,
+//         "mood":      entry.Mood,
