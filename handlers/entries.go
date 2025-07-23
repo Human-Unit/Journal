@@ -76,6 +76,7 @@ func ListEntries(c *gin.Context) {
     })
 }
 func ReadEntry(c *gin.Context) {
+	db := database.GetDB()
 	id := c.Param("id")
 	var entry models.Entry
 	result := db.First(&entry, id)
@@ -93,6 +94,7 @@ func ReadEntry(c *gin.Context) {
 
 // UpdateEntry updates an existing journal entry by ID
 func UpdateEntry(c *gin.Context) {
+	db := database.GetDB()
 	id := c.Param("id")
 	if id == "" {
 		c.JSON(400, gin.H{"error": "ID is required"})
@@ -116,6 +118,7 @@ func UpdateEntry(c *gin.Context) {
 
 // DeleteEntry deletes a journal entry by ID
 func DeleteEntry(c *gin.Context) {
+	db := database.GetDB()
 	id := c.Param("id")
 	if id == "" {
 		c.JSON(400, gin.H{"error": "ID is required"})
@@ -138,6 +141,7 @@ func DeleteEntry(c *gin.Context) {
 
 // SearchEntries searches for journal entries by a query string
 func SearchEntries(c *gin.Context) {
+	db := database.GetDB()
 	query := c.Query("query")
 	if query == "" {
 		c.JSON(400, gin.H{"error": "Query parameter is required"})
@@ -156,6 +160,7 @@ func SearchEntries(c *gin.Context) {
 
 // ListEntriesByMood retrieves journal entries filtered by mood
 func ListEntriesByMood(c *gin.Context) {
+	db := database.GetDB()
 	mood := c.Param("mood")
 	if mood == "" {
 		c.JSON(400, gin.H{"error": "Mood is required"})
@@ -174,6 +179,7 @@ func ListEntriesByMood(c *gin.Context) {
 
 // ListTags retrieves a list of unique tags from journal entries
 func ListTags(c *gin.Context) {
+	db := database.GetDB()
 	var entries []models.Entry
 	result := db.Select("DISTINCT tags").Find(&entries)
 	if result.Error != nil {
@@ -193,6 +199,7 @@ func ListTags(c *gin.Context) {
 
 // ListPrivateEntries retrieves all private journal entries
 func ListPrivateEntries(c *gin.Context) {
+	db := database.GetDB()
 	var entries []models.Entry
 	result := db.Where("is_private = ?", true).Find(&entries)
 	if result.Error != nil {
