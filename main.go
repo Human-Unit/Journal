@@ -24,8 +24,12 @@ func main() {
 	router.POST("/register", handlers.CreateUser)
 	router.GET("/login", handlers.LoginUser) // Assuming this is a login endpoint
 	//router.POST("/login", handlers.LoginUser)  // You should add this
-
+	router.Static("/frontend", "./frontend")
 	// Protected routes
+	router.GET("/", func(c *gin.Context) {
+		c.Redirect(302, "/frontend/register.html")
+	})
+
 	protected := router.Group("/")
 	protected.Use(middleware.Auth())
 	{

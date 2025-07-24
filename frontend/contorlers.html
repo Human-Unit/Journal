@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management Dashboard - Telia Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 2rem;
+        }
+        
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #4B0082;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            color: #6A1B9A;
+            font-weight: 400;
+            transition: background-color 0.3s;
+        }
+        
+        .tab:hover,
+        .tab.active {
+            background-color: #6A1B9A;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 400;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #6A1B9A;
+            box-shadow: 0 0 5px rgba(106, 27, 154, 0.3);
+        }
+        
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #6A1B9A;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #4B0082;
+        }
+        
+        button.delete {
+            background-color: #d32f2f;
+        }
+        
+        button.delete:hover {
+            background-color: #b71c1c;
+        }
+        
+        .error-message,
+        .success-message,
+        .user-details {
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+        }
+        
+        .success-message {
+            color: #2e7d32;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        
+        th,
+        td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        th {
+            background-color: #6A1B9A;
+            color: white;
+        }
+        
+        td button {
+            width: auto;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+        }
+        
+        .forgot-password {
+            display: block;
+            text-align: right;
+            margin-bottom: 1rem;
+            color: #6A1B9A;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+                max-width: 90%;
+            }
+            .tabs {
+                flex-direction: column;
+            }
+            .tab {
+                padding: 0.5rem;
+                text-align: center;
+            }
+            th,
+            td {
+                font-size: 0.9rem;
+                padding: 0.5rem;
+            }
+            td button {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>User Management</h1>
+        <div class="tabs">
+            <div class="tab active" data-tab="create">Create User</div>
+            <div class="tab" data-tab="login">Login</div>
+            <div class="tab" data-tab="list">List Users</div>
+            <div class="tab" data-tab="read">Read User</div>
+            <div class="tab" data-tab="update">Update User</div>
+            <div class="tab" data-tab="delete">Delete User</div>
+        </div>
+
+        <div class="tab-content active" id="create">
+            <form id="createUserForm">
+                <label for="create-username">Username</label>
+                <input type="text" id="create-username" name="username" required>
+                <label for="create-email">Email</label>
+                <input type="email" id="create-email" name="email" required>
+                <label for="create-password">Password</label>
+                <input type="password" id="create-password" name="password" required>
+                <div class="error-message" id="create-error"></div>
+                <div class="success-message" id="create-success"></div>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+
+        <div class="tab-content" id="login">
+            <form id="loginForm">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" name="email" required>
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" name="password" required>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+                <div class="error-message" id="login-error"></div>
+                <div class="success-message" id="login-success"></div>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+
+        <div class="tab-content" id="list">
+            <div class="error-message" id="list-error"></div>
+            <table id="userTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody"></tbody>
+            </table>
+        </div>
+
+        <div class="tab-content" id="read">
+            <form id="readUserForm">
+                <label for="read-email">Email</label>
+                <input type="email" id="read-email" name="email" required>
+                <div class="error-message" id="read-error"></div>
+                <button type="submit">Search</button>
+            </form>
+            <div class="user-details" id="read-details"></div>
+        </div>
+
+        <div class="tab-content" id="update">
+            <form id="updateUserForm">
+                <label for="update-email">Email</label>
+                <input type="email" id="update-email" name="email" required>
+                <label for="update-password">New Password</label>
+                <input type="password" id="update-password" name="password" required>
+                <div class="error-message" id="update-error"></div>
+                <div class="success-message" id="update-success"></div>
+                <button type="submit">Update</button>
+            </form>
+        </div>
+
+        <div class="tab-content" id="delete">
+            <form id="deleteUserForm">
+                <label for="delete-email">Email</label>
+                <input type="email" id="delete-email" name="email" required>
+                <div class="error-message" id="delete-error"></div>
+                <div class="success-message" id="delete-success"></div>
+                <button type="submit" class="delete">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+                if (tab.dataset.tab === 'list') loadUsers();
+            });
+        });
+
+        // Create User
+        document.getElementById('createUserForm').addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const username = document.getElementById('create-username').value;
+            const email = document.getElementById('create-email').value;
+            const password = document.getElementById('create-password').value;
+            const error = document.getElementById('create-error');
+            const success = document.getElementById('create-success');
+
+            try {
+                const response = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    error.textContent = errorData.error + ': ' + errorData.details;
+                    error.style.display = 'block';
+                    success.style.display = 'none';
+                    return;
+                }
+
+                error.style.display = 'none';
+                success.textContent = 'User created successfully';
+                success.style.display = 'block';
+                document.getElementById('createUserForm').reset();
+                loadUsers();
+            } catch (err) {
+                error.textContent = 'Network error: ' + err.message;
+                error.style.display = 'block';
+                success.style.display = 'none';
+            }
+        });
+
+        // Login User
+        document.getElementById('loginForm').addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const error = document.getElementById('login-error');
+            const success = document.getElementById('login-success');
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    error.textContent = errorData.error || errorData.Authorisation || 'Login failed';
+                    if (errorData.details) error.textContent += ': ' + errorData.details;
+                    error.style.display = 'block';
+                    success.style.display = 'none';
+                    return;
+                }
+
+                error.style.display = 'none';
+                success.textContent = 'Login successful! Token set in cookie.';
+                success.style.display = 'block';
+                document.getElementById('loginForm').reset();
+            } catch (err) {
+                error.textContent = 'Network error: ' + err.message;
+                error.style.display = 'block';
+                success.style.display = 'none';
+            }
+        });
+
+        // List Users
+        async function loadUsers() {
+            const error = document.getElementById('list-error');
+            const userTableBody = document.getElementById('userTableBody');
+
+            try {
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                // If authentication is required, uncomment the following to include the token
+                // const token = document.cookie.split('; ').find(row => row.startsWith('token=')).split('=')[1];
+                // if (token) headers['Authorization'] = `Bearer ${token}`;
+
+                const response = await fetch('/api/users', {
+                    method: 'GET',
+                    headers: headers,
+                });
+
+                // Check Content-Type to ensure it's JSON
+                const contentType = response.headers.get('content-type');
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        error.textContent = 'Unauthorized: Please log in first.';
+                        error.style.display = 'block';
+                        userTableBody.innerHTML = '';
+                        // Switch to login tab
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        document.querySelector('.tab[data-tab="login"]').classList.add('active');
+                        document.getElementById('login').classList.add('active');
+                        return;
+                    }
+                    if (contentType && contentType.includes('application/json')) {
+                        const errorData = await response.json();
+                        error.textContent = `${response.status} ${errorData.error || 'Error'}: ${errorData.details || 'Unknown error'}`;
+                    } else {
+                        const text = await response.text();
+                        error.textContent = `${response.status} Error: Server returned non-JSON response (${text.slice(0, 50)}...)`;
+                    }
+                    error.style.display = 'block';
+                    userTableBody.innerHTML = '';
+                    return;
+                }
+
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    error.textContent = `Error: Expected JSON, received ${text.slice(0, 50)}...`;
+                    error.style.display = 'block';
+                    userTableBody.innerHTML = '';
+                    return;
+                }
+
+                error.style.display = 'none';
+                const data = await response.json();
+                userTableBody.innerHTML = '';
+                data.users.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.ID}</td>
+                        <td>${user.Email}</td>
+                        <td>${new Date(user.CreatedAt).toLocaleString()}</td>
+                        <td>
+                            <button onclick="fillForm('read', '${user.Email}')">View</button>
+                            <button onclick="fillForm('update', '${user.Email}')">Update</button>
+                            <button class="delete" onclick="fillForm('delete', '${user.Email}')">Delete</button>
+                        </td>
+                    `;
+                    userTableBody.appendChild(row);
+                });
+            } catch (err) {
+                error.textContent = 'Network error: ' + err.message;
+                error.style.display = 'block';
+                userTableBody.innerHTML = '';
+            }
+        }
+
+        // Read User
+        document.getElementById('readUserForm').addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const email = document.getElementById('read-email').value;
+            const error = document.getElementById('read-error');
+            const details = document.getElementById('read-details');
+
+            try {
+                const response = await fetch(`/api/users?email=${encodeURIComponent(email)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    error.textContent = errorData.error;
+                    if (errorData.details) error.textContent += ': ' + errorData.details;
+                    error.style.display = 'block';
+                    details.style.display = 'none';
+                    return;
+                }
+
+                error.style.display = 'none';
+                const user = await response.json();
+                details.innerHTML = `
+                    <p><strong>ID:</strong> ${user.ID}</p>
+                    <p><strong>Email:</strong> ${user.Email}</p>
+                    <p><strong>Created At:</strong> ${new Date(user.CreatedAt).toLocaleString()}</p>
+                `;
+                details.style.display = 'block';
+            } catch (err) {
+                error.textContent = 'Network error: ' + err.message;
+                error.style.display = 'block';
+                details.style.display = 'none';
+            }
+        });
+
+        // Update User
+        document.getElementById('updateUserForm').addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const email = document.getElementById('update-email').value;
+            const password = document.getElementById('update-password').value;
+            const error = document.getElementById('update-error');
+            const success = document.getElementById('update-success');
+
+            try {
+                const response = await fetch(`/api/users/${encodeURIComponent(email)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Pass: password
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    error.textContent = errorData.error;
+                    if (errorData.details) error.textContent += ': ' + errorData.details;
+                    error.style.display = 'block';
+                    success.style.display = 'none';
+                    return;
+                }
+
+                error.style.display = 'none';
+                success.textContent = 'User updated successfully';
+                success.style.display = 'block';
+                document.getElementById('updateUserForm').reset();
+                loadUsers();
+            } catch (err) {
+                error.textContent = 'Network error: ' + err.message;
+                error.style.display = 'block';
+                success.style.display = 'none';
+            }
+        });
+
+        // Delete User
+        document.getElementById('deleteUserForm').addEventListener('submit', async(e) => {
+            e.preventDefault();
+            const email = document.getElementById('delete-email').value;
+            const error = document.getElementById('delete-error');
+            const success = document.getElementById('delete-success');
+
+            if (!confirm(`Are you sure you want to delete the user with email ${email}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/users/${encodeURIComponent(email)}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    error.textContent = errorData.error;
+                    if (errorData.details) error.textContent += ': ' + errorData.details;
+                    error.style.display = 'block';
+                    success.style.display = 'none';
+                    return;
+                }
+
+                error.style.display = 'none';
+                success.textContent = 'User deleted successfully';
+                success.style.display = 'block';
+                document.getElementById('deleteUserForm').reset();
+                loadUsers();
+            } catch (err) {
+                error.textContent = 'Network error: ' + err.message;
+                error.style.display = 'block';
+                success.style.display = 'none';
+            }
+        });
+
+        // Helper to fill forms and switch tabs
+        function fillForm(tab, email) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById(tab).classList.add('active');
+            if (tab === 'read') {
+                document.getElementById('read-email').value = email;
+                document.getElementById('readUserForm').dispatchEvent(new Event('submit'));
+            } else if (tab === 'update') {
+                document.getElementById('update-email').value = email;
+            } else if (tab === 'delete') {
+                document.getElementById('delete-email').value = email;
+            }
+        }
+
+        // Load users on page load if List tab is active
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.querySelector('.tab.active').dataset.tab === 'list') {
+                loadUsers();
+            }
+        });
+    </script>
+</body>
+
+</html>
