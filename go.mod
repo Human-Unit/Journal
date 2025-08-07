@@ -1,4 +1,4 @@
-module Gin
+//module Gin
 module github.com/Human-Unit/Journal
 
 go 1.20
