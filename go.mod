@@ -1,5 +1,5 @@
 //module Gin
-module github.com/Human-Unit/Journal
+module Gin
 
 go 1.20
 
