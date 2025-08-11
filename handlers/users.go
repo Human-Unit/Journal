@@ -6,6 +6,7 @@ import (
     "github.com/gin-gonic/gin"
     "gorm.io/gorm"
     "Gin/middleware"
+    "golang.org/x/crypto/bcrypt"
 )
 
 func CreateUser(c *gin.Context) {
@@ -17,7 +18,15 @@ func CreateUser(c *gin.Context) {
         })
         return
     }
-
+    hash, err := bcrypt.GenerateFromPassword([]byte(user.Pass), bcrypt.DefaultCost)
+    if err != nil {
+        c.JSON(400, gin.H{
+            "error":   "Invalid input",
+            "details": err.Error(),
+        })
+        return
+    }
+    user.Pass = string(hash)
     // Save the user to the database
     db := database.GetDB()
     result := db.Create(&user)
@@ -29,28 +38,31 @@ func CreateUser(c *gin.Context) {
 }
 func LoginUser (c *gin.Context){
     var users models.User 
-    var usersCheck models.User
+    var dbUser models.User
     db := database.GetDB()
-    if err := c.ShouldBindJSON(&usersCheck); err != nil {
+
+    if err := c.ShouldBindBodyWithJSON(&users); err != nil {
         c.JSON(400, gin.H{
             "error":   "Invalid input",
             "details": err.Error(),
         })
         return
     }
-    result := db.Select("ID", "Email", "CreatedAt").Find(&users)
-    if result.Error != nil {
-        c.JSON(500, gin.H{
-            "error": "Failed to retrieve users",
-            "details": "Database error occurred",
+
+    if err := db.Where("email = ?", users.Email).First(&dbUser).Error; err != nil{
+        c.JSON(401, gin.H{
+            "error": "Invalid credentials",
+        })
+        return
+
+    }
+
+    if err := bcrypt.CompareHashAndPassword([]byte(dbUser.Pass), []byte(users.Pass)); err != nil {
+        c.JSON(401, gin.H{
+            "error": "Invalid credentials",
         })
         return
     }
-    if users.Email != usersCheck.Email {
-        c.JSON(401, gin.H{
-            "Authorisation":"Failed",
-        })
-    } 
     token, err := middleware.CreateToken(users)
     if err != nil {
         c.JSON(500, gin.H{"error": "Failed to generate token"})
