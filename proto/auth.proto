@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "proto/gen/go"; 
+
+// The Auth service definition.
+service AuthService {
+    // Sends a string value.
+    rpc SendString(SendStringRequest) returns (SendStringResponse);
+}
+
+// The request message containing the string to send.
+message SendStringRequest {
+    string value = 1;
+}
+
+// The response message containing the acknowledgment.
+message SendStringResponse {
+    string acknowledgment = 1;
+}
