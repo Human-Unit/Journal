@@ -7,15 +7,16 @@ option go_package = "proto/gen/go";
 // The Auth service definition.
 service AuthService {
     // Sends a string value.
-    rpc SendString(SendStringRequest) returns (SendStringResponse);
+    rpc SendUserLogData(UserLogDataRequest) returns (UserLogDataResponse);
 }
 
 // The request message containing the string to send.
-message SendStringRequest {
-    string value = 1;
+message UserLogDataRequest {
+    string email = 1;
+    string password = 2;
 }
 
 // The response message containing the acknowledgment.
-message SendStringResponse {
-    string acknowledgment = 1;
+message UserLogDataResponse {
+    string token = 1;
 }

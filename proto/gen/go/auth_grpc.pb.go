@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_SendString_FullMethodName = "/auth.AuthService/SendString"
+	AuthService_SendUserLogData_FullMethodName = "/auth.AuthService/SendUserLogData"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -29,7 +29,7 @@ const (
 // The Auth service definition.
 type AuthServiceClient interface {
 	// Sends a string value.
-	SendString(ctx context.Context, in *SendStringRequest, opts ...grpc.CallOption) (*SendStringResponse, error)
+	SendUserLogData(ctx context.Context, in *UserLogDataRequest, opts ...grpc.CallOption) (*UserLogDataResponse, error)
 }
 
 type authServiceClient struct {
@@ -40,10 +40,10 @@ func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 	return &authServiceClient{cc}
 }
 
-func (c *authServiceClient) SendString(ctx context.Context, in *SendStringRequest, opts ...grpc.CallOption) (*SendStringResponse, error) {
+func (c *authServiceClient) SendUserLogData(ctx context.Context, in *UserLogDataRequest, opts ...grpc.CallOption) (*UserLogDataResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SendStringResponse)
-	err := c.cc.Invoke(ctx, AuthService_SendString_FullMethodName, in, out, cOpts...)
+	out := new(UserLogDataResponse)
+	err := c.cc.Invoke(ctx, AuthService_SendUserLogData_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *authServiceClient) SendString(ctx context.Context, in *SendStringReques
 // The Auth service definition.
 type AuthServiceServer interface {
 	// Sends a string value.
-	SendString(context.Context, *SendStringRequest) (*SendStringResponse, error)
+	SendUserLogData(context.Context, *UserLogDataRequest) (*UserLogDataResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -68,8 +68,8 @@ type AuthServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServiceServer struct{}
 
-func (UnimplementedAuthServiceServer) SendString(context.Context, *SendStringRequest) (*SendStringResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendString not implemented")
+func (UnimplementedAuthServiceServer) SendUserLogData(context.Context, *UserLogDataRequest) (*UserLogDataResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendUserLogData not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -92,20 +92,20 @@ func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
 	s.RegisterService(&AuthService_ServiceDesc, srv)
 }
 
-func _AuthService_SendString_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendStringRequest)
+func _AuthService_SendUserLogData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserLogDataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).SendString(ctx, in)
+		return srv.(AuthServiceServer).SendUserLogData(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_SendString_FullMethodName,
+		FullMethod: AuthService_SendUserLogData_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).SendString(ctx, req.(*SendStringRequest))
+		return srv.(AuthServiceServer).SendUserLogData(ctx, req.(*UserLogDataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -118,8 +118,8 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SendString",
-			Handler:    _AuthService_SendString_Handler,
+			MethodName: "SendUserLogData",
+			Handler:    _AuthService_SendUserLogData_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

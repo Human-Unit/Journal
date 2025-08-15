@@ -22,27 +22,28 @@ const (
 )
 
 // The request message containing the string to send.
-type SendStringRequest struct {
+type UserLogDataRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Value         string                 `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SendStringRequest) Reset() {
-	*x = SendStringRequest{}
+func (x *UserLogDataRequest) Reset() {
+	*x = UserLogDataRequest{}
 	mi := &file_proto_auth_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SendStringRequest) String() string {
+func (x *UserLogDataRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SendStringRequest) ProtoMessage() {}
+func (*UserLogDataRequest) ProtoMessage() {}
 
-func (x *SendStringRequest) ProtoReflect() protoreflect.Message {
+func (x *UserLogDataRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_auth_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -54,40 +55,47 @@ func (x *SendStringRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SendStringRequest.ProtoReflect.Descriptor instead.
-func (*SendStringRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UserLogDataRequest.ProtoReflect.Descriptor instead.
+func (*UserLogDataRequest) Descriptor() ([]byte, []int) {
 	return file_proto_auth_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *SendStringRequest) GetValue() string {
+func (x *UserLogDataRequest) GetEmail() string {
 	if x != nil {
-		return x.Value
+		return x.Email
+	}
+	return ""
+}
+
+func (x *UserLogDataRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
 	}
 	return ""
 }
 
 // The response message containing the acknowledgment.
-type SendStringResponse struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	Acknowledgment string                 `protobuf:"bytes,1,opt,name=acknowledgment,proto3" json:"acknowledgment,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+type UserLogDataResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SendStringResponse) Reset() {
-	*x = SendStringResponse{}
+func (x *UserLogDataResponse) Reset() {
+	*x = UserLogDataResponse{}
 	mi := &file_proto_auth_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SendStringResponse) String() string {
+func (x *UserLogDataResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SendStringResponse) ProtoMessage() {}
+func (*UserLogDataResponse) ProtoMessage() {}
 
-func (x *SendStringResponse) ProtoReflect() protoreflect.Message {
+func (x *UserLogDataResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_auth_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -99,14 +107,14 @@ func (x *SendStringResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SendStringResponse.ProtoReflect.Descriptor instead.
-func (*SendStringResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UserLogDataResponse.ProtoReflect.Descriptor instead.
+func (*UserLogDataResponse) Descriptor() ([]byte, []int) {
 	return file_proto_auth_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *SendStringResponse) GetAcknowledgment() string {
+func (x *UserLogDataResponse) GetToken() string {
 	if x != nil {
-		return x.Acknowledgment
+		return x.Token
 	}
 	return ""
 }
@@ -115,14 +123,14 @@ var File_proto_auth_proto protoreflect.FileDescriptor
 
 const file_proto_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x10proto/auth.proto\x12\x04auth\")\n" +
-	"\x11SendStringRequest\x12\x14\n" +
-	"\x05value\x18\x01 \x01(\tR\x05value\"<\n" +
-	"\x12SendStringResponse\x12&\n" +
-	"\x0eacknowledgment\x18\x01 \x01(\tR\x0eacknowledgment2N\n" +
-	"\vAuthService\x12?\n" +
-	"\n" +
-	"SendString\x12\x17.auth.SendStringRequest\x1a\x18.auth.SendStringResponseB\x0eZ\fproto/gen/gob\x06proto3"
+	"\x10proto/auth.proto\x12\x04auth\"F\n" +
+	"\x12UserLogDataRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"+\n" +
+	"\x13UserLogDataResponse\x12\x14\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token2U\n" +
+	"\vAuthService\x12F\n" +
+	"\x0fSendUserLogData\x12\x18.auth.UserLogDataRequest\x1a\x19.auth.UserLogDataResponseB\x0eZ\fproto/gen/gob\x06proto3"
 
 var (
 	file_proto_auth_proto_rawDescOnce sync.Once
@@ -138,12 +146,12 @@ func file_proto_auth_proto_rawDescGZIP() []byte {
 
 var file_proto_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_auth_proto_goTypes = []any{
-	(*SendStringRequest)(nil),  // 0: auth.SendStringRequest
-	(*SendStringResponse)(nil), // 1: auth.SendStringResponse
+	(*UserLogDataRequest)(nil),  // 0: auth.UserLogDataRequest
+	(*UserLogDataResponse)(nil), // 1: auth.UserLogDataResponse
 }
 var file_proto_auth_proto_depIdxs = []int32{
-	0, // 0: auth.AuthService.SendString:input_type -> auth.SendStringRequest
-	1, // 1: auth.AuthService.SendString:output_type -> auth.SendStringResponse
+	0, // 0: auth.AuthService.SendUserLogData:input_type -> auth.UserLogDataRequest
+	1, // 1: auth.AuthService.SendUserLogData:output_type -> auth.UserLogDataResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
