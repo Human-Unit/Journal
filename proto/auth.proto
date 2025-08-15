@@ -8,6 +8,7 @@ option go_package = "proto/gen/go";
 service AuthService {
     // Sends a string value.
     rpc SendUserLogData(UserLogDataRequest) returns (UserLogDataResponse);
+    rpc SaveUser(SaveUserRequest) returns (SaveUserResponse);
 }
 
 // The request message containing the string to send.
@@ -20,3 +21,14 @@ message UserLogDataRequest {
 message UserLogDataResponse {
     string token = 1;
 }
+
+// The request message for saving a user.
+message SaveUserRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message SaveUserResponse {
+    string message = 1;
+}
+

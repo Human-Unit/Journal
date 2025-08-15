@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"Gin/middleware"
 	pb "Gin/proto/gen/go" // Ensure this matches your actual generated protobuf package
 )
 
@@ -36,6 +35,10 @@ func Login(c *gin.Context) {
 	// Get token from request
 	data, err := GetData(c)
 	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid input format",
+			"details": err.Error(),
+		})
 		return // Error response already handled in GetData
 	}
 
@@ -53,9 +56,9 @@ func Login(c *gin.Context) {
 	}
 	defer conn.Close()
 
+
 	// Create gRPC client
 	client := pb.NewAuthServiceClient(conn)
-
 	// Call gRPC service
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
@@ -64,7 +67,7 @@ func Login(c *gin.Context) {
 		Email: data.Email,
 		Password: data.Password, // Pass the extracted token string
 	})
-	middleware.SetTokenCookie(c, response.Token)
+	SetTokenCookie(c, response.Token)
 	if err != nil {
 		log.Printf("gRPC call failed: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -77,4 +80,7 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"Token": response.Token,
 	})
+}
+func SetTokenCookie(c *gin.Context, token string) {
+	c.SetCookie("token", token, 86400, "/", "", false, true)
 }

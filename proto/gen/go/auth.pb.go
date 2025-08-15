@@ -119,6 +119,103 @@ func (x *UserLogDataResponse) GetToken() string {
 	return ""
 }
 
+// The request message for saving a user.
+type SaveUserRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SaveUserRequest) Reset() {
+	*x = SaveUserRequest{}
+	mi := &file_proto_auth_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SaveUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SaveUserRequest) ProtoMessage() {}
+
+func (x *SaveUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_auth_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SaveUserRequest.ProtoReflect.Descriptor instead.
+func (*SaveUserRequest) Descriptor() ([]byte, []int) {
+	return file_proto_auth_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *SaveUserRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *SaveUserRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+type SaveUserResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SaveUserResponse) Reset() {
+	*x = SaveUserResponse{}
+	mi := &file_proto_auth_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SaveUserResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SaveUserResponse) ProtoMessage() {}
+
+func (x *SaveUserResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_auth_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SaveUserResponse.ProtoReflect.Descriptor instead.
+func (*SaveUserResponse) Descriptor() ([]byte, []int) {
+	return file_proto_auth_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *SaveUserResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_proto_auth_proto protoreflect.FileDescriptor
 
 const file_proto_auth_proto_rawDesc = "" +
@@ -128,9 +225,15 @@ const file_proto_auth_proto_rawDesc = "" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"+\n" +
 	"\x13UserLogDataResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token2U\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"C\n" +
+	"\x0fSaveUserRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\",\n" +
+	"\x10SaveUserResponse\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage2\x90\x01\n" +
 	"\vAuthService\x12F\n" +
-	"\x0fSendUserLogData\x12\x18.auth.UserLogDataRequest\x1a\x19.auth.UserLogDataResponseB\x0eZ\fproto/gen/gob\x06proto3"
+	"\x0fSendUserLogData\x12\x18.auth.UserLogDataRequest\x1a\x19.auth.UserLogDataResponse\x129\n" +
+	"\bSaveUser\x12\x15.auth.SaveUserRequest\x1a\x16.auth.SaveUserResponseB\x0eZ\fproto/gen/gob\x06proto3"
 
 var (
 	file_proto_auth_proto_rawDescOnce sync.Once
@@ -144,16 +247,20 @@ func file_proto_auth_proto_rawDescGZIP() []byte {
 	return file_proto_auth_proto_rawDescData
 }
 
-var file_proto_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_proto_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_auth_proto_goTypes = []any{
 	(*UserLogDataRequest)(nil),  // 0: auth.UserLogDataRequest
 	(*UserLogDataResponse)(nil), // 1: auth.UserLogDataResponse
+	(*SaveUserRequest)(nil),     // 2: auth.SaveUserRequest
+	(*SaveUserResponse)(nil),    // 3: auth.SaveUserResponse
 }
 var file_proto_auth_proto_depIdxs = []int32{
 	0, // 0: auth.AuthService.SendUserLogData:input_type -> auth.UserLogDataRequest
-	1, // 1: auth.AuthService.SendUserLogData:output_type -> auth.UserLogDataResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	2, // 1: auth.AuthService.SaveUser:input_type -> auth.SaveUserRequest
+	1, // 2: auth.AuthService.SendUserLogData:output_type -> auth.UserLogDataResponse
+	3, // 3: auth.AuthService.SaveUser:output_type -> auth.SaveUserResponse
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -170,7 +277,7 @@ func file_proto_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_auth_proto_rawDesc), len(file_proto_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
