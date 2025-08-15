@@ -31,7 +31,7 @@ func GetData(c *gin.Context) (UserLog, error) {
 }
 
 
-func SendToken(c *gin.Context) {
+func Login(c *gin.Context) {
 	// Get token from request
 	data, err := GetData(c)
 	if err != nil {

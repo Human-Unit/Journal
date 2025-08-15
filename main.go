@@ -6,6 +6,7 @@ import (
 	"Gin/middleware"
 	"log"
 	"github.com/gin-gonic/gin"
+	grpc "Gin/middleware/grpc_auth"// Importing the generated gRPC package for authentication
 	"Gin/test" // Importing the test package for gRPC communication
 )
 
@@ -23,7 +24,7 @@ func main() {
 
 	// Public routes
 	router.POST("/register", handlers.CreateUser)
-	router.GET("/login", handlers.LoginUser) 
+	router.GET("/login", grpc.Login) 
 	router.Static("/frontend", "./frontend")
 	// Protected routes
 	router.GET("/", func(c *gin.Context) {
@@ -53,7 +54,7 @@ func main() {
 		journal.GET("/tags", handlers.ListTags)
 		journal.GET("/private", handlers.ListPrivateEntries)
 	}
-	router.GET("/auth",test.SendToken)	// Start server
+	router.GET("/auth",test.Login)	// Start server
 	log.Println("Starting server on port 8080...")
 	if err := router.Run(":8080"); err != nil {	
 		log.Fatalf("Failed to start server: %v", err)
